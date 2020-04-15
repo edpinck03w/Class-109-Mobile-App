@@ -17,7 +17,19 @@
       <ion-item><ion-label position="stacked">Image URL:</ion-label>
         <ion-input [(ngModel)]="message.imageUrl" name="image"></ion-input>
       </ion-item>
-      
+
+      <ion-item>
+        <ion-label position="stacked">To:</ion-label>
+        <ion-select [(ngModel)]="message.to">
+          <ion-select-option value="General">General</ion-select-option>
+
+          <ion-select-option *ngFor="let friend of myFriends" [value]="friend.name">
+            {{friend.name}}
+          </ion-select-option>
+
+        </ion-select>
+      </ion-item>
+
       <ion-button [disabled]="!message.text && !message.imageUrl" (click)="onPost()" class="main-button" expand="block" color="dark">Submit</ion-button>
 
     </ion-card-content>

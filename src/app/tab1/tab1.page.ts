@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Message } from '../models/message';
+import { SharedService } from '../services/shared.service';
 
 @Component({
   selector: 'app-tab1',
@@ -13,12 +14,21 @@ export class Tab1Page {
   
   
 
-  constructor(private data: DataService) {
+  constructor(private data: DataService, private shared: SharedService) {
     this.homework();
     data.getAllMessages().subscribe( list => {
       console.log('obs emited value');
 
-      this.displayMessage = list.sort((left, right) => {
+      var filtered = [];
+      for(let i=0; i<list.length; i++){
+        var m = list[i];
+        if(m.to =="General" || m.to == shared.userName || m.from == shared.userName){
+          filtered.push(m);
+          console.log(m);
+        }
+      }
+
+      this.displayMessage = filtered.sort((left, right) => {
        // return -1 when the left should go first
        // return 1 when right should go first
        // return 0 if they are the same
@@ -124,12 +134,56 @@ export class Tab1Page {
   
     console.log(data);
 
-    //1 - Sort items by age descending
-    //2 - sort items by age ascending
-    //3 - Print only actives
-    //4 - sum all the balances
+//1 - Sort items by age descending
+    data.sort(function(a,b){
+      return b.age - a.age;
+    });
+  console.log(`${data[0].name}, ${data[0].age} , is the oldest person in the class.` );
+  console.log(data);
+
+//2 - sort items by age ascending
+  data.sort(function(a,b){
+    return a.age - b.age;
+});
+console.log(`${data[0].name}, ${data[0].age} , is the youngest person in the class.` );
+console.log(data);
+
+ //3 - Print only actives
+var results = [];
+for(var i=0;i<data.length;i++) {
+  if(data[i].isActive === true){
+    results.push(data[i]);
+    console.log(data[i]);
   }
-  solve1(data) {
+  
+}
+
+
+//4 - sum all the balances
+var sum = 0;
+for(var i=0;i<data.length;i++) {
+  var num = data[i].balance.replace("$","").replace(",","");
+
+  var ct = parseFloat(num);
+  sum += ct;
+  
+}
+console.log(sum);
+
+
+
+    
+    
+   
+    
+  }
+ // solve1(data) {
     //your code here to: 1 - sort items by ages dec
-  }
+    
+  
+  //sort items by age ascending
+  
+
+
+//  }
 }

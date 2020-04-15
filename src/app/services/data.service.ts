@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
 import { map } from  'rxjs/operators'
 import { firestore } from 'firebase';
+import { Friend } from '../models/friends';
 
 
 
@@ -15,15 +16,30 @@ export class DataService {
   allMessages: Observable<Message[]>;
   messageCollection: AngularFirestoreCollection<Message>; // pipeline to firebase database
 
+allFriends: Observable<Friend[]>;
+friendCollection: AngularFirestoreCollection<Friend>;
+
   constructor(private fb: AngularFirestore) {
     this.messageCollection = fb.collection<Message>('posts'); //initialize the connection to the app -> firebase
-   }
+   
+    this.friendCollection = fb.collection<Friend>('friends'); // initializa connection
+
+  }
 
    // This is a good way to read data without the date format
   //retrieveMessagesFromDB() {
   //  this.allMessages = this.messageCollection.valueChanges();
   //}
    
+  //retrieveMessagesFromDB(){ 
+  //  this.allMessages = this.messageCollection.valueChanges();
+  //}
+
+  retrieveFriendsFromDB(){
+    this.allFriends = this.friendCollection.valueChanges();
+  }
+
+
   retrieveMessagesFromDB(){
     this.allMessages = this.messageCollection.snapshotChanges().pipe(
       map(actions => {
@@ -49,5 +65,17 @@ export class DataService {
   public getAllMessages() {
     this.retrieveMessagesFromDB(); // subscribe to all changes
     return this.allMessages;
+
+    
+
+  }
+  public saveFriend(friend){
+    var plain = Object.assign({}, friend);
+    this.friendCollection.add(plain);
+  }
+
+  public getAllFriends(){
+    this.retrieveFriendsFromDB();
+    return this.allFriends;
   }
 }
