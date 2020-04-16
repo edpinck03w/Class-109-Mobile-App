@@ -1,3 +1,16 @@
 ion-content ion-toolbar {
   --background: translucent;
 }
+
+ion-title {
+  text-align: center;
+  font-size: 1.35rem;
+}
+
+ion-card {
+  background-color: white;
+}
+
+ion-card-content {
+  background-color: white;
+}
